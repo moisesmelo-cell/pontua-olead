@@ -119,7 +119,7 @@
                     </div>
                     
                     <div class="space-y-4" id="actions-list">
-                        <!-- Item 1 -->
+                        <!-- Item 1: Abertura (1pt) -->
                         <label class="custom-checkbox flex items-center justify-between p-4 rounded-lg bg-slate-800/50 border border-slate-700/50 hover:border-brand-blue/50 transition cursor-pointer group">
                             <div class="flex items-center gap-4">
                                 <input type="checkbox" class="hidden" value="1" data-label="Abertura de e-mail" onchange="calculateScore()">
@@ -131,31 +131,31 @@
                             <span class="text-brand-green font-bold text-sm bg-brand-green/10 px-2 py-1 rounded">+1 pt</span>
                         </label>
 
-                        <!-- Item 2 -->
+                        <!-- Item 2: Clique em CTA (1pt) -->
                         <label class="custom-checkbox flex items-center justify-between p-4 rounded-lg bg-slate-800/50 border border-slate-700/50 hover:border-brand-blue/50 transition cursor-pointer group">
                             <div class="flex items-center gap-4">
-                                <input type="checkbox" class="hidden" value="2" data-label="Clique em CTA" onchange="calculateScore()">
+                                <input type="checkbox" class="hidden" value="1" data-label="Clique em CTA" onchange="calculateScore()">
                                 <div class="w-6 h-6 rounded border border-slate-500 flex items-center justify-center transition-colors group-hover:border-brand-blue">
                                     <svg class="w-4 h-4 text-brand-dark hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                                 </div>
                                 <span class="text-white font-medium">Clique em CTA</span>
                             </div>
-                            <span class="text-brand-green font-bold text-sm bg-brand-green/10 px-2 py-1 rounded">+2 pts</span>
+                            <span class="text-brand-green font-bold text-sm bg-brand-green/10 px-2 py-1 rounded">+1 pt</span>
                         </label>
 
-                        <!-- Item 3 -->
+                        <!-- Item 3: Download (2pts) -->
                         <label class="custom-checkbox flex items-center justify-between p-4 rounded-lg bg-slate-800/50 border border-slate-700/50 hover:border-brand-blue/50 transition cursor-pointer group">
                             <div class="flex items-center gap-4">
-                                <input type="checkbox" class="hidden" value="3" data-label="Download de material rico" onchange="calculateScore()">
+                                <input type="checkbox" class="hidden" value="2" data-label="Download de material rico" onchange="calculateScore()">
                                 <div class="w-6 h-6 rounded border border-slate-500 flex items-center justify-center transition-colors group-hover:border-brand-blue">
                                     <svg class="w-4 h-4 text-brand-dark hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                                 </div>
                                 <span class="text-white font-medium">Download de material rico</span>
                             </div>
-                            <span class="text-brand-green font-bold text-sm bg-brand-green/10 px-2 py-1 rounded">+3 pts</span>
+                            <span class="text-brand-green font-bold text-sm bg-brand-green/10 px-2 py-1 rounded">+2 pts</span>
                         </label>
 
-                        <!-- Item 4 -->
+                        <!-- Item 4: 2 Conteúdos (2pts) -->
                         <label class="custom-checkbox flex items-center justify-between p-4 rounded-lg bg-slate-800/50 border border-slate-700/50 hover:border-brand-blue/50 transition cursor-pointer group">
                             <div class="flex items-center gap-4">
                                 <input type="checkbox" class="hidden" value="2" data-label="Consumo de 2 conteúdos diferentes" onchange="calculateScore()">
@@ -167,19 +167,19 @@
                             <span class="text-brand-green font-bold text-sm bg-brand-green/10 px-2 py-1 rounded">+2 pts</span>
                         </label>
 
-                        <!-- Item 5 -->
+                        <!-- Item 5: 3+ Conteúdos (2pts) -->
                         <label class="custom-checkbox flex items-center justify-between p-4 rounded-lg bg-slate-800/50 border border-slate-700/50 hover:border-brand-blue/50 transition cursor-pointer group">
                             <div class="flex items-center gap-4">
-                                <input type="checkbox" class="hidden" value="3" data-label="Consumo de 3+ conteúdos" onchange="calculateScore()">
+                                <input type="checkbox" class="hidden" value="2" data-label="Consumo de 3+ conteúdos" onchange="calculateScore()">
                                 <div class="w-6 h-6 rounded border border-slate-500 flex items-center justify-center transition-colors group-hover:border-brand-blue">
                                     <svg class="w-4 h-4 text-brand-dark hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                                 </div>
                                 <span class="text-white font-medium">Consumo de 3+ conteúdos</span>
                             </div>
-                            <span class="text-brand-green font-bold text-sm bg-brand-green/10 px-2 py-1 rounded">+3 pts</span>
+                            <span class="text-brand-green font-bold text-sm bg-brand-green/10 px-2 py-1 rounded">+2 pts</span>
                         </label>
 
-                        <!-- Item 6 -->
+                        <!-- Item 6: Engajamento (2pts) -->
                         <label class="custom-checkbox flex items-center justify-between p-4 rounded-lg bg-slate-800/50 border border-slate-700/50 hover:border-brand-blue/50 transition cursor-pointer group">
                             <div class="flex items-center gap-4">
                                 <input type="checkbox" class="hidden" value="2" data-label="Engajamento contínuo (+60 dias)" onchange="calculateScore()">
@@ -207,7 +207,7 @@
                     
                     <div class="flex items-baseline justify-center gap-1 mb-6">
                         <span id="score-display" class="text-7xl font-display font-bold text-white transition-all">0</span>
-                        <span class="text-slate-500 text-xl font-medium">/ 10+</span>
+                        <span class="text-slate-500 text-xl font-medium">/ 10</span>
                     </div>
 
                     <!-- Barra de Progresso Visual -->
