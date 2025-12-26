@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead Scoring | Xertica.ai</title>
+   
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+   
+    <!-- Configuração do Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#0F172A',
+                            blue: '#00BEFF',
+                            green: '#C0FF7D',
+                            pink: '#FF89FF',
+                            slate: '#1E293B',
+                            red: '#FF4D4D',
+                            orange: '#FFB84D',
+                        },
+                        fontFamily: {
+                            sans: ['Roboto', 'sans-serif'],
+                            display: ['Poppins', 'sans-serif'],
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+   
+    <!-- Material Symbols -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <style>
+        /* --- FUNDO GERAL --- */
+        body {
+            background-color: #0F172A;
+            background-image: url('https://i.imgur.com/dULOC88.png');
+            background-size: cover;
+            background-position: top center;
+            background-attachment: fixed;
+            color: #e2e8f0;
+        }
+
+        /* Gradiente de Texto */
+        .text-gradient {
+            background: linear-gradient(90deg, #00BEFF, #C0FF7D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- CARD GLASSMORPHISM --- */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+        }
+
+        /* Checkbox Customizado */
+        .custom-checkbox input:checked + div {
+            background-color: #00BEFF;
+            border-color: #00BEFF;
+        }
+        .custom-checkbox input:checked + div svg {
+            display: block;
+        }
+        
+        /* Barra de Progresso Animada */
+        .progress-bar {
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.5s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans">
+
+    <!-- Header (Estilo original restaurado) -->
+    <header class="w-full py-6 border-b border-white/5 bg-brand-dark/50 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <img src="https://storage.googleapis.com/etp-bucket/Logos%20Xertica.ai%20%28.png%29/xertica.ai/Copy%20of%20Logo_XERTICA_white.png" alt="Xertica.ai" class="h-6 md:h-8" onerror="this.onerror=null; this.src='https://placehold.co/150x40/0F172A/FFF?text=Xertica.ai';">
+                <div class="h-6 w-px bg-white/20 hidden md:block"></div>
+                <h1 class="text-white font-display font-semibold text-sm md:text-base hidden md:block">Lead Scoring</h1>
+            </div>
+            <div class="text-xs font-bold bg-brand-blue/10 text-brand-blue px-3 py-1 rounded-full border border-brand-blue/20">
+                LEAD SCORING v1.0
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow py-12 px-6">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            <!-- Coluna Esquerda: Calculadora -->
+            <div class="lg:col-span-7 space-y-6">
+                
+                <div class="mb-2">
+                    <h2 class="text-3xl font-display font-bold text-white mb-2">Calculadora de Maturidade</h2>
+                    <p class="text-slate-400">Marque as interações para definir o SLA e próximos passos.</p>
+                </div>
+
+                <!-- Lista de Ações -->
+                <div class="glass-card p-6 md:p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xs uppercase tracking-wider text-slate-500 font-bold">Critérios de Engajamento</h3>
+                        <button onclick="resetCalculator()" class="text-xs text-slate-500 hover:text-white transition-colors flex items-center gap-1">
+                            <span class="material-symbols-outlined text-sm">restart_alt</span> Limpar
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-4" id="actions-list">
+                        <!-- Item 1 -->
+                        <label class="custom-checkbox flex items-center justify-between p-4 rounded-lg bg-slate-800/50 border border-slate-700/50 hover:border-brand-blue/50 transition cursor-pointer group">
+                            <div class="flex items-center gap-4">
+                                <input type="checkbox" class="hidden" value="1" data-label="Abertura de e-mail" onchange="calculateScore()">
+                                <div class="w-6 h-6 rounded border border-slate-500 flex items-center justify-center transition-colors group-hover:border-brand-blue">
+                                    <svg class="w-4 h-4 text-brand-dark hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <span class="text-white font-medium">Abertura de e-mail</span>
+                            </div>
+                            <span class="text-brand-green font-bold text-sm bg-brand-green/10 px-2 py-1 rounded">+1 pt</span>
+                        </label>
+
+                        <!-- Item 2 -->
+                        <label class="custom-checkbox flex items-center justify-between p-4 rounded-lg bg-slate-800/50 border border-slate-700/50 hover:border-brand-blue/50 transition cursor-pointer group">
+                            <div class="flex items-center gap-4">
+                                <input type="checkbox" class="hidden" value="2" data-label="Clique em CTA" onchange="calculateScore()">
+                                <div class="w-6 h-6 rounded border border-slate-500 flex items-center justify-center transition-colors group-hover:border-brand-blue">
+                                    <svg class="w-4 h-4 text-brand-dark hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <span class="text-white font-medium">Clique em CTA</span>
+                            </div>
+                            <span class="text-brand-green font-bold text-sm bg-brand-green/10 px-2 py-1 rounded">+2 pts</span>
+                        </label>
+
+                        <!-- Item 3 -->
+                        <label class="custom-checkbox flex items-center justify-between p-4 rounded-lg bg-slate-800/50 border border-slate-700/50 hover:border-brand-blue/50 transition cursor-pointer group">
+                            <div class="flex items-center gap-4">
+                                <input type="checkbox" class="hidden" value="3" data-label="Download de material rico" onchange="calculateScore()">
+                                <div class="w-6 h-6 rounded border border-slate-500 flex items-center justify-center transition-colors group-hover:border-brand-blue">
+                                    <svg class="w-4 h-4 text-brand-dark hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <span class="text-white font-medium">Download de material rico</span>
+                            </div>
+                            <span class="text-brand-green font-bold text-sm bg-brand-green/10 px-2 py-1 rounded">+3 pts</span>
+                        </label>
+
+                        <!-- Item 4 -->
+                        <label class="custom-checkbox flex items-center justify-between p-4 rounded-lg bg-slate-800/50 border border-slate-700/50 hover:border-brand-blue/50 transition cursor-pointer group">
+                            <div class="flex items-center gap-4">
+                                <input type="checkbox" class="hidden" value="2" data-label="Consumo de 2 conteúdos diferentes" onchange="calculateScore()">
+                                <div class="w-6 h-6 rounded border border-slate-500 flex items-center justify-center transition-colors group-hover:border-brand-blue">
+                                    <svg class="w-4 h-4 text-brand-dark hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <span class="text-white font-medium">Consumo de 2 conteúdos diferentes</span>
+                            </div>
+                            <span class="text-brand-green font-bold text-sm bg-brand-green/10 px-2 py-1 rounded">+2 pts</span>
+                        </label>
+
+                        <!-- Item 5 -->
+                        <label class="custom-checkbox flex items-center justify-between p-4 rounded-lg bg-slate-800/50 border border-slate-700/50 hover:border-brand-blue/50 transition cursor-pointer group">
+                            <div class="flex items-center gap-4">
+                                <input type="checkbox" class="hidden" value="3" data-label="Consumo de 3+ conteúdos" onchange="calculateScore()">
+                                <div class="w-6 h-6 rounded border border-slate-500 flex items-center justify-center transition-colors group-hover:border-brand-blue">
+                                    <svg class="w-4 h-4 text-brand-dark hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <span class="text-white font-medium">Consumo de 3+ conteúdos</span>
+                            </div>
+                            <span class="text-brand-green font-bold text-sm bg-brand-green/10 px-2 py-1 rounded">+3 pts</span>
+                        </label>
+
+                        <!-- Item 6 -->
+                        <label class="custom-checkbox flex items-center justify-between p-4 rounded-lg bg-slate-800/50 border border-slate-700/50 hover:border-brand-blue/50 transition cursor-pointer group">
+                            <div class="flex items-center gap-4">
+                                <input type="checkbox" class="hidden" value="2" data-label="Engajamento contínuo (+60 dias)" onchange="calculateScore()">
+                                <div class="w-6 h-6 rounded border border-slate-500 flex items-center justify-center transition-colors group-hover:border-brand-blue">
+                                    <svg class="w-4 h-4 text-brand-dark hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <span class="text-white font-medium">Engajamento contínuo (+60 dias)</span>
+                            </div>
+                            <span class="text-brand-green font-bold text-sm bg-brand-green/10 px-2 py-1 rounded">+2 pts</span>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Coluna Direita: Resultado -->
+            <div class="lg:col-span-5 space-y-6 sticky top-24 self-start">
+                
+                <!-- Card de Resultado -->
+                <div class="glass-card p-8 text-center relative overflow-hidden border-t-4 border-t-slate-600 transition-all duration-300" id="result-card">
+                    <!-- Glow de fundo dinâmico -->
+                    <div id="glow-bg" class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-slate-500/10 blur-[80px] -z-10 transition-colors duration-500"></div>
+
+                    <h3 class="text-slate-400 text-sm font-semibold uppercase mb-4">Pontuação Atual</h3>
+                    
+                    <div class="flex items-baseline justify-center gap-1 mb-6">
+                        <span id="score-display" class="text-7xl font-display font-bold text-white transition-all">0</span>
+                        <span class="text-slate-500 text-xl font-medium">/ 10+</span>
+                    </div>
+
+                    <!-- Barra de Progresso Visual -->
+                    <div class="w-full bg-slate-800 rounded-full h-3 mb-8 overflow-hidden">
+                        <div id="progress-bar" class="progress-bar h-full bg-slate-500 w-0"></div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 text-left">
+                        <div class="bg-slate-900/50 p-4 rounded-lg border border-white/5">
+                            <span class="block text-xs text-slate-500 uppercase font-bold mb-1">Status</span>
+                            <span id="status-text" class="text-lg font-bold text-slate-300">Frio</span>
+                        </div>
+                        <div class="bg-slate-900/50 p-4 rounded-lg border border-white/5">
+                            <span class="block text-xs text-slate-500 uppercase font-bold mb-1">Ação Sugerida</span>
+                            <span id="action-text" class="text-lg font-bold text-slate-300">Nutrição Educacional</span>
+                        </div>
+                    </div>
+
+                    <!-- Instrução Extra (adicionada para uso interno) -->
+                    <div class="mt-4 pt-4 border-t border-white/5 text-left">
+                        <span class="block text-xs text-slate-500 uppercase font-bold mb-1">Contexto & Objetivo</span>
+                        <p id="status-desc" class="text-xs text-slate-400 leading-relaxed text-justify">
+                            Fase inicial do relacionamento com o lead, focada em construção de consciência. O objetivo é apresentar o contexto de mercado, tendências e desafios amplos, sem qualquer abordagem comercial. Os conteúdos são educativos e de baixa fricção, buscando gerar familiaridade com o tema e estimular as primeiras interações.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Tabela de Referência -->
+                <div class="glass-card p-6">
+                    <h3 class="text-xs uppercase tracking-wider text-slate-500 font-bold mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">tune</span>
+                        Régua de Parâmetros
+                    </h3>
+                    
+                    <div class="space-y-2 text-sm">
+                        <!-- Linha 9-10 -->
+                        <div class="flex items-center justify-between p-2 rounded hover:bg-white/5 transition opacity-50" id="row-9-10">
+                            <div class="flex items-center gap-3">
+                                <span class="font-mono text-brand-green font-bold w-10">9–10</span>
+                                <span class="text-white font-bold text-xs md:text-sm">Lead Prioritário (MQL)</span>
+                            </div>
+                            <span class="text-slate-400 text-[10px] md:text-xs uppercase bg-slate-800 px-2 py-1 rounded border border-slate-700">Acionar Vendas</span>
+                        </div>
+                        <!-- Linha 7-8 -->
+                        <div class="flex items-center justify-between p-2 rounded hover:bg-white/5 transition opacity-50" id="row-7-8">
+                            <div class="flex items-center gap-3">
+                                <span class="font-mono text-brand-blue font-bold w-10">7–8</span>
+                                <span class="text-white font-bold text-xs md:text-sm">Lead Qualificado</span>
+                            </div>
+                            <span class="text-slate-400 text-[10px] md:text-xs uppercase bg-slate-800 px-2 py-1 rounded border border-slate-700">Decisão (ROI)</span>
+                        </div>
+                        <!-- Linha 5-6 -->
+                        <div class="flex items-center justify-between p-2 rounded hover:bg-white/5 transition opacity-50" id="row-5-6">
+                            <div class="flex items-center gap-3">
+                                <span class="font-mono text-brand-pink font-bold w-10">5–6</span>
+                                <span class="text-white font-bold text-xs md:text-sm">Lead Engajado</span>
+                            </div>
+                            <span class="text-slate-400 text-[10px] md:text-xs uppercase bg-slate-800 px-2 py-1 rounded border border-slate-700">Prova Social</span>
+                        </div>
+                        <!-- Linha 3-4 -->
+                        <div class="flex items-center justify-between p-2 rounded hover:bg-white/5 transition opacity-50" id="row-3-4">
+                            <div class="flex items-center gap-3">
+                                <span class="font-mono text-brand-orange font-bold w-10">3–4</span>
+                                <span class="text-white font-bold text-xs md:text-sm">Em Aquecimento</span>
+                            </div>
+                            <span class="text-slate-400 text-[10px] md:text-xs uppercase bg-slate-800 px-2 py-1 rounded border border-slate-700">Nutrição Segmentada</span>
+                        </div>
+                        <!-- Linha 0-2 -->
+                        <div class="flex items-center justify-between p-2 rounded hover:bg-white/5 transition opacity-100 bg-white/5" id="row-0-2">
+                            <div class="flex items-center gap-3">
+                                <span class="font-mono text-slate-400 font-bold w-10">0–2</span>
+                                <span class="text-white font-bold text-xs md:text-sm">Lead Frio</span>
+                            </div>
+                            <span class="text-slate-400 text-[10px] md:text-xs uppercase bg-slate-800 px-2 py-1 rounded border border-slate-700">Nutrição Educacional</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer simples -->
+    <footer class="py-4 text-center border-t border-slate-800/50">
+        <p class="text-slate-600 text-xs">Uso Interno - Xertica.ai © 2025</p>
+    </footer>
+
+    <script>
+        // Definição das regras atualizada com o manual de vendas
+        const rules = [
+            { 
+                min: 9, max: 99, 
+                status: 'Lead Prioritário (MQL)', 
+                action: 'Acionar Vendas (SLA 48h)', 
+                color: '#C0FF7D', 
+                border: 'border-t-brand-green', 
+                rowId: 'row-9-10',
+                desc: "O lead demonstra alta intenção e sinais claros de prontidão para contato. Nesta fase, ocorre a transição para o time de vendas, que assume uma abordagem consultiva e personalizada, focada em diagnóstico, entendimento do contexto e construção conjunta da solução."
+            },
+            { 
+                min: 7, max: 8, 
+                status: 'Lead Qualificado (MQL Light)', 
+                action: 'Conteúdo de Decisão (ROI)', 
+                color: '#00BEFF', 
+                border: 'border-t-brand-blue', 
+                rowId: 'row-7-8',
+                desc: "Fase de pré-decisão, em que o lead já avalia aplicabilidade e impacto. Os conteúdos são orientados a ROI, maturidade e viabilidade, ajudando o lead a entender como a solução pode funcionar em sua realidade. É o momento de preparar o terreno para uma conversa comercial qualificada."
+            },
+            { 
+                min: 5, max: 6, 
+                status: 'Lead Engajado', 
+                action: 'Prova Social / Cases', 
+                color: '#FF89FF', 
+                border: 'border-t-brand-pink', 
+                rowId: 'row-5-6',
+                desc: "O lead apresenta engajamento consistente e começa a buscar validação. O objetivo desta etapa é fortalecer a credibilidade da solução por meio de provas sociais, como estudos de caso, benchmarks e webinars on-demand. Aqui, a marca se posiciona como referência prática, não apenas conceitual."
+            },
+            { 
+                min: 3, max: 4, 
+                status: 'Lead em Aquecimento', 
+                action: 'Nutrição Segmentada', 
+                color: '#FFB84D', 
+                border: 'border-t-brand-orange', 
+                rowId: 'row-3-4',
+                desc: "Nesta fase, o lead já demonstra interesse inicial. A comunicação passa a ser mais direcionada, conectando desafios específicos da indústria com possíveis caminhos de solução, ainda sem venda direta. O foco é aprofundar o problema e reforçar a relevância da marca para aquele cenário."
+            },
+            { 
+                min: 0, max: 2, 
+                status: 'Lead Frio', 
+                action: 'Nutrição Educacional', 
+                color: '#64748b', 
+                border: 'border-t-slate-600', 
+                rowId: 'row-0-2',
+                desc: "Fase inicial do relacionamento com o lead, focada em construção de consciência. O objetivo é apresentar o contexto de mercado, tendências e desafios amplos, sem qualquer abordagem comercial. Os conteúdos são educativos e de baixa fricção, buscando gerar familiaridade com o tema e estimular as primeiras interações."
+            },
+        ];
+
+        function calculateScore() {
+            // 1. Calcular soma
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            let totalScore = 0;
+            
+            checkboxes.forEach(cb => {
+                totalScore += parseInt(cb.value);
+            });
+
+            // 2. Encontrar regra correspondente
+            const rule = rules.find(r => totalScore >= r.min && totalScore <= r.max) || rules[rules.length - 1];
+
+            // 3. Atualizar UI - Score
+            const scoreDisplay = document.getElementById('score-display');
+            scoreDisplay.textContent = totalScore;
+            scoreDisplay.style.color = rule.color === '#64748b' ? '#ffffff' : rule.color;
+
+            // 4. Atualizar UI - Textos
+            document.getElementById('status-text').textContent = rule.status;
+            document.getElementById('status-text').style.color = rule.color;
+            
+            document.getElementById('action-text').textContent = rule.action;
+            
+            // Atualizar descrição (Instrução Operacional)
+            document.getElementById('status-desc').textContent = rule.desc;
+
+            // 5. Atualizar UI - Barra de Progresso (max visual é 10)
+            const percentage = Math.min((totalScore / 10) * 100, 100);
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.width = `${percentage}%`;
+            progressBar.style.backgroundColor = rule.color;
+
+            // 6. Atualizar UI - Card Styles
+            const resultCard = document.getElementById('result-card');
+            // Remove classes antigas de borda
+            rules.forEach(r => resultCard.classList.remove(r.border));
+            resultCard.classList.add(rule.border);
+            
+            // Atualizar Glow
+            const glow = document.getElementById('glow-bg');
+            glow.style.backgroundColor = rule.color;
+
+            // 7. Atualizar Destaque na Tabela
+            rules.forEach(r => {
+                const row = document.getElementById(r.rowId);
+                if (r.rowId === rule.rowId) {
+                    row.classList.add('bg-white/10', 'opacity-100');
+                    row.classList.remove('opacity-50');
+                } else {
+                    row.classList.remove('bg-white/10', 'opacity-100', 'bg-white/5'); 
+                    row.classList.add('opacity-50');
+                }
+            });
+        }
+
+        function resetCalculator() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(cb => cb.checked = false);
+            calculateScore();
+        }
+    </script>
+</body>
+</html>
